@@ -1,0 +1,42 @@
+services:
+  questdb:
+    image: questdb/questdb:9.3.1
+    ports: 
+      - "8812:8812"  # Postgres Wire Protocol
+      - "9000:9000"  # Web Console
+      - "9009:9009"  # ILP (Ingress)
+    environment:
+      - TZ=Europe/Paris
+      - QDB_PG_USER=admin
+      - QDB_PG_PASSWORD=quest
+    volumes:
+      - ./questdb/data:/var/lib/questdb
+    healthcheck:
+      test: ["CMD-SHELL", "curl -v http://127.0.0.1:9003"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    depends_on:
+      questdb:
+        condition: service_healthy
+    ports: [ "5000:5000" ]
+    environment:
+      - TZ=Europe/Paris
+
+  grafana:
+    image: grafana/grafana:12.3.1
+    depends_on:
+      questdb:
+        condition: service_healthy
+    ports: [ "3000:3000" ]
+    environment:
+      - TZ=Europe/Paris
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_DASHBOARDS_DEFAULT_TIMEZONE=Europe/Paris
+      - GF_INSTALL_PLUGINS=questdb-questdb-datasource
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
