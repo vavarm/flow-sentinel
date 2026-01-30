@@ -94,6 +94,7 @@
         "y": 0
       },
       "id": 1,
+      "maxDataPoints": 2000,
       "options": {
         "alignValue": "left",
         "legend": {
@@ -117,16 +118,18 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
+          "exemplar": false,
           "expr": "probe_success{instance=\"http://backend:5000/metrics\"}",
           "format": "time_series",
           "instant": false,
+          "interval": "",
           "legendFormat": " ",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Pulse (Uptime)",
+      "title": "Uptime",
       "type": "state-timeline"
     },
     {
@@ -252,11 +255,11 @@
             "type": "questdb-questdb-datasource",
             "uid": "QuestDB"
           },
-          "rawSql": "SELECT ts as day, sum(val) as total FROM metrics WHERE $__timeFilter(ts) SAMPLE BY 1d FILL(null) ALIGN TO CALENDAR TIME ZONE '$__timezone'",
+          "rawSql": "SELECT ts as day, sum(val) as total FROM metrics WHERE $__timeFilter(ts) SAMPLE BY 1d FILL(0) ALIGN TO CALENDAR TIME ZONE '$__timezone'",
           "refId": "A"
         }
       ],
-      "title": "Daily Aggregation (Sum)",
+      "title": "Production per day",
       "transformations": [
         {
           "id": "convertFieldType",
