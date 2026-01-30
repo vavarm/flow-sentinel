@@ -16,6 +16,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    
+  frontend:
+    build: ./frontend
+    depends_on:
+      questdb:
+        condition: service_healthy
+    ports: [ "8501:8501" ]
+    environment:
+      - TZ=Europe/Paris
 
   backend:
     build: ./backend
