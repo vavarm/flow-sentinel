@@ -58,6 +58,17 @@
                 }
               },
               "type": "value"
+            },
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "#808080",
+                  "index": 2,
+                  "text": "UNKNOWN"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
